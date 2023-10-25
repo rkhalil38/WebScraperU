@@ -72,8 +72,15 @@ export async function GET(request: Request){
     const words = searchParams.get('words')
     const urls = searchParams.get('urls')
 
-    const allowParsing = isValidUrl(urls? urls : "notValid")
+    const urlList = urls? urls.split(',') : []
+    const wordList = words? words.split(',') : []
 
+
+    let allowParsing = true
+    for (let i = 0; i < urlList.length; i++){
+        allowParsing = isValidUrl(urlList[i])
+    }
+    
     if (allowParsing){
         const parsing_page = await fetch(urls? urls : '')
         const html = await parsing_page.text()
@@ -96,7 +103,7 @@ export async function GET(request: Request){
         return new Response(JSON.stringify(finalArray))
     }
 
-    return new Response(JSON.stringify("ouch"))
+    return new Response(JSON.stringify("One or more invalid URLs."))
 }
 
 export async function PATCH(request: Request){
