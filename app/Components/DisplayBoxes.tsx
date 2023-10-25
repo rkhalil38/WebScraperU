@@ -11,9 +11,8 @@ interface FormData {
 
 const DisplayBoxes = ({ formData, url, submitEvent }: {formData: FormData, url: string, submitEvent: number}) => {
 
-    const [manipulatedData, setManipData] = useState({
-        words: '',
-        urls: '',
+    const [scrapedData, setScrapedData] = useState({
+        mentions: ''
     })
 
     useEffect((() => {
@@ -30,6 +29,12 @@ const DisplayBoxes = ({ formData, url, submitEvent }: {formData: FormData, url: 
             const dataToLog = await get_response.json()
             console.log(dataToLog)
 
+            setScrapedData({
+                mentions: dataToLog
+            })
+
+
+
         }
 
         retrieveUserData()
@@ -38,7 +43,7 @@ const DisplayBoxes = ({ formData, url, submitEvent }: {formData: FormData, url: 
 
     return (
         <div className='container text-black rounded-md bg-white w-full h-1/2'>
-            {formData['words']}{formData['urls']}
+            
         </div>
     )
 }

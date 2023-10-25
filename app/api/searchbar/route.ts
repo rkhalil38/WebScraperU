@@ -1,7 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 import { Console } from "console";
 import * as cheerio from 'cheerio';
-import { Cheerio } from "cheerio";
 
 const supabase = createClient(
     'https://rievaasppfxgozuupggo.supabase.co',
@@ -14,6 +13,33 @@ function isValidUrl(url: string) {
     
     // Test the provided URL against the pattern
     return urlPattern.test(url);
+}
+
+function removeLongStrings(inputArray: string[]) {
+    return inputArray.filter(string => string.length <= 400);
+}
+
+function removeDuplicates(dirtyData: string[]){
+    const cleanArray: string[] = []
+    dirtyData.forEach(element => { 
+        if (!cleanArray.includes(element)) { 
+            cleanArray.push(element); 
+        } 
+    }); 
+
+    return cleanArray
+    
+}
+
+function cleanData(dirtyData: string[]){
+    
+    const cleanData = dirtyData? removeDuplicates(dirtyData) : []
+
+    const finalArray = removeLongStrings(cleanData? cleanData : [])
+
+    return finalArray
+
+
 }
 
 export async function POST(request: Request){
@@ -52,28 +78,22 @@ export async function GET(request: Request){
         const parsing_page = await fetch(urls? urls : '')
         const html = await parsing_page.text()
         const $ = cheerio.load(html)
-        //const regex = new RegExp(words? words : '', 'gi');
 
-        const mentionedElements = $('*').find(':contains("' + words + '")')
         const textArray: string[] = []
-    
-        mentionedElements.each(function() {
-            const elementText = $(this).text();
+        const mentionedElements = $('*').find(':contains("' + words + '")')
+
+        mentionedElements.each((index, element: cheerio.Element) => {
+            const elementText = $(element).text();
 
             const cleanedText = elementText.replace(/\n/g, '')
             const trimmedText = cleanedText.replace(/\s{2,}/g, ' ').trim()
 
             textArray.push(trimmedText)
-        });  
+        });
 
-        let cleanArray: string[] = []; 
-        textArray.forEach(element => { 
-            if (!cleanArray.includes(element)) { 
-                cleanArray.push(element); 
-            } 
-        }); 
+        const finalArray = cleanData(textArray)
         
-        return new Response(JSON.stringify(cleanArray))
+        return new Response(JSON.stringify(finalArray))
     }
 
     return new Response(JSON.stringify("ouch"))
