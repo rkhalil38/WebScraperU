@@ -86,9 +86,6 @@ export async function GET(request: Request){
     const urlList = urls? urls.split('--') : []
     const wordList = words? words.split('-') : []
 
-
-    console.log(urlList)
-
     let allowParsing = true
     for (let i = 0; i < urlList.length; i++){
         allowParsing = validator.isURL(urlList[i])
@@ -99,7 +96,6 @@ export async function GET(request: Request){
         const mentions = []
 
         for (let i = 0; i < urlList.length; i++){
-            console.log('made it here')
             const parsing_page = await fetch(urlList? urlList[i] : '')
             const html = await parsing_page.text()
             const $ = cheerio.load(html)

@@ -35,6 +35,31 @@ const DisplayBoxes = ({ formData, url, submitEvent }: {formData: FormData, url: 
         }
     }
 
+    function countWordOccurrences(words: string[], arrayOfStrings: string[]) {
+        // Initialize a counter
+        let count = 0;
+
+        console.log(arrayOfStrings)
+    
+        // Iterate through each string in the array
+        arrayOfStrings.forEach((string) => {
+
+            const stringArray = string.split(' ')
+            
+            for (let j = 0; j < stringArray.length; j++){
+                for (let i = 0; i < words.length; i++){
+                    if (stringArray[j].toLowerCase().includes(words[i].toLowerCase())){
+                        count += 1
+                    }
+                }
+            }
+        }
+        );
+    
+        // Return the final count
+        return count;
+    }
+
     useEffect((() => {
 
         const fetching_url = url +  '?words=' + wordParam + '&urls=' + urlParam
@@ -64,8 +89,8 @@ const DisplayBoxes = ({ formData, url, submitEvent }: {formData: FormData, url: 
     return (
         <div className='container flex flex-row text-black rounded-md w-full h-1/2'>
             {(scrapedData as Array<object>).map((data: any, index: number) => (
-                <div key={index} className='container h-48 w-48 mx-2 flex justify-center items-center rounded-md bg-white'>
-                    <p className='text-8xl'>{data.mentions.length}</p>
+                <div key={index} className='container h-48 w-48 mx-2 flex justify-center items-center rounded-md bg-white duration-75 cursor-pointer hover:-translate-y-1 hover:translate-x-1'>
+                    <p className='text-8xl'>{countWordOccurrences(activeWords, data.mentions)}</p>
                 </div>
             ))}
         </div>
