@@ -130,16 +130,35 @@ export async function GET(request: Request){
             const rawData = cleanData(textArray)
             const refinedData = removeSimilarElements(rawData)
 
+            let count = 0
+
+            refinedData.forEach((string) => {
+
+                const stringArray = string.split(' ')
+                
+                for (let j = 0; j < stringArray.length; j++){
+                    for (let i = 0; i < wordList.length; i++){
+                        if (stringArray[j].toLowerCase().includes(wordList[i].toLowerCase())){
+                            count += 1
+                        }
+                    }
+                }
+            }
+            );
+
             interface URLMentionObject{
                 [key: string]: any
             }
 
             let obj: URLMentionObject = {}
-            
+    
             mentions.push({
                 url: urlList[i],
-                mentions: refinedData
+                mentions: refinedData,
+                rawMentions: count
             })
+
+            
         }
         
         return new Response(JSON.stringify(mentions))

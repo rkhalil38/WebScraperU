@@ -35,7 +35,7 @@ const DisplayBoxes = ({ formData, url, submitEvent }: {formData: FormData, url: 
         }
     }
 
-    function countWordOccurrences(words: string[], arrayOfStrings: string[]) {
+    /*function countWordOccurrences(words: string[], arrayOfStrings: string[]) {
         // Initialize a counter
         let count = 0;
 
@@ -58,7 +58,7 @@ const DisplayBoxes = ({ formData, url, submitEvent }: {formData: FormData, url: 
     
         // Return the final count
         return count;
-    }
+    }*/
 
     useEffect((() => {
 
@@ -90,7 +90,7 @@ const DisplayBoxes = ({ formData, url, submitEvent }: {formData: FormData, url: 
         <div className='container flex flex-row text-black rounded-md w-full h-1/2'>
             {(scrapedData as Array<object>).map((data: any, index: number) => (
                 <div key={index} className='container h-48 w-48 mx-2 flex justify-center items-center rounded-md bg-white duration-75 cursor-pointer hover:-translate-y-1 hover:translate-x-1'>
-                    <p className='text-8xl'>{countWordOccurrences(activeWords, data.mentions)}</p>
+                    <p className='text-8xl'>{data.rawMentions}</p>
                 </div>
             ))}
         </div>
