@@ -11,13 +11,33 @@ interface FormData {
 
 const DisplayBoxes = ({ formData, url, submitEvent }: {formData: FormData, url: string, submitEvent: number}) => {
 
-    const [scrapedData, setScrapedData] = useState({
-        mentions: ''
-    })
+    const [scrapedData, setScrapedData] = useState<object>([])
+    const activeURLs = formData['urls'].split(', ')
+    const activeWords = formData['words'].split(', ')
+    
+    let wordParam = ''
+    let urlParam = ''
+    for (let i = 0; i < activeURLs.length; i++){
+        if (i == 0){
+            urlParam += activeURLs[i]
+        }
+        else{
+            urlParam += '--' + activeURLs[i]
+        }
+    }
+
+    for (let i = 0; i < activeWords.length; i++){
+        if (i == 0){
+            wordParam += activeWords[i]
+        }
+        else{
+            wordParam += '-' + activeWords[i]
+        }
+    }
 
     useEffect((() => {
 
-        const fetching_url = url +  '?words=' + formData['words'] + '&urls=' + formData['urls']
+        const fetching_url = url +  '?words=' + wordParam + '&urls=' + urlParam
         
 
         const retrieveUserData = async () => {
@@ -26,14 +46,12 @@ const DisplayBoxes = ({ formData, url, submitEvent }: {formData: FormData, url: 
                 method: 'GET'
             })
 
-            const dataToLog = await get_response.json()
-            console.log(dataToLog)
+            const data = await get_response.json()
 
-            setScrapedData({
-                mentions: dataToLog
-            })
+            const data_array = Object.values(data)
+            console.log(data_array)
 
-
+            setScrapedData(data_array)            
 
         }
 
@@ -41,9 +59,15 @@ const DisplayBoxes = ({ formData, url, submitEvent }: {formData: FormData, url: 
 
     }), [submitEvent])
 
+    //map scraped data to display boxes
+
     return (
-        <div className='container text-black rounded-md bg-white w-full h-1/2'>
-            
+        <div className='container flex flex-row text-black rounded-md w-full h-1/2'>
+            {(scrapedData as Array<object>).map((data: any, index: number) => (
+                <div key={index} className='container h-48 w-48 mx-2 flex justify-center items-center rounded-md bg-white'>
+                    <p className='text-8xl'>{data.mentions.length}</p>
+                </div>
+            ))}
         </div>
     )
 }
