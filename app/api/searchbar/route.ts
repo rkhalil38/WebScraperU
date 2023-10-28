@@ -10,7 +10,7 @@ const supabase = createClient(
 
 
 function removeLongStrings(inputArray: string[]) {
-    return inputArray.filter(string => string.length <= 400);
+    return inputArray.filter(string => string.length <= 700);
 }
 
 function removeDuplicates(dirtyData: string[]){
@@ -134,14 +134,20 @@ export async function GET(request: Request){
 
             refinedData.forEach((string) => {
 
-                const stringArray = string.split(' ')
-                
-                for (let j = 0; j < stringArray.length; j++){
-                    for (let i = 0; i < wordList.length; i++){
-                        if (stringArray[j].toLowerCase().includes(wordList[i].toLowerCase())){
-                            count += 1
+                if (wordList[i].split(' ').length === 1){
+
+                    const stringArray = string.split(' ')
+
+                    for (let j = 0; j < stringArray.length; j++){
+                        for (let i = 0; i < wordList.length; i++){
+                            if (stringArray[j].toLowerCase().includes(wordList[i].toLowerCase())){
+                                    count += 1
+                            }
                         }
                     }
+                }
+                else if (string.toLowerCase().includes(wordList[i].toLowerCase())){
+                    count += 1
                 }
             }
             );
