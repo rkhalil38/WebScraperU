@@ -84,7 +84,7 @@ export async function GET(request: Request){
     const urls = searchParams.get('urls')
 
     const urlList = urls? urls.split('--') : []
-    const wordList = words? words.split('-') : []
+    const wordList = words? words.split('--') : []
 
     let allowParsing = true
     for (let i = 0; i < urlList.length; i++){
@@ -134,21 +134,22 @@ export async function GET(request: Request){
 
             refinedData.forEach((string) => {
 
-                if (wordList[i].split(' ').length === 1){
+                const stringArray = string.split(' ')
 
-                    const stringArray = string.split(' ')
-
-                    for (let j = 0; j < stringArray.length; j++){
-                        for (let i = 0; i < wordList.length; i++){
-                            if (stringArray[j].toLowerCase().includes(wordList[i].toLowerCase())){
-                                    count += 1
-                            }
+                for (let j = 0; j < wordList.length; j++){
+                    for (let n = 0; n < stringArray.length; n++){
+                        if (stringArray[n].toLowerCase().includes(wordList[j].toLowerCase())){
+                                count += 1
                         }
                     }
+                    console.log(string)
+                    console.log(wordList[j])
+                    if (wordList[j].toLowerCase().includes(string.toLowerCase())){
+                        count += 1
+                    }
+
                 }
-                else if (string.toLowerCase().includes(wordList[i].toLowerCase())){
-                    count += 1
-                }
+                
             }
             );
 
