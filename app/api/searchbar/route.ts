@@ -25,6 +25,20 @@ function removeDuplicates(dirtyData: string[]){
     
 }
 
+//write a function that removes any string from a list of strings that contains the word "ad"
+function removeAds(dirtyData: string[]){
+    const cleanArray: string[] = []
+
+    dirtyData.forEach(element => {
+        if (!element.toLowerCase().includes(" ad ") && !element.toLowerCase().includes("ad ")
+        && !element.toLowerCase().includes(" ad") && !element.toLowerCase().includes(" ads ")){
+            cleanArray.push(element)
+        }
+    })
+
+    return cleanArray
+}
+
 //write a function that compares string elements inside an array
 //if the string elements contain an identical substring, remove the longer string
 function removeSimilarElements(dirtyData: string[]){
@@ -128,7 +142,8 @@ export async function GET(request: Request){
             }
 
             const rawData = cleanData(textArray)
-            const refinedData = removeSimilarElements(rawData)
+            const adFreeData = removeAds(rawData)
+            const refinedData = removeSimilarElements(adFreeData)
 
             let count = 0
 
@@ -137,8 +152,10 @@ export async function GET(request: Request){
                 const stringArray = string.split(' ')
 
                 for (let j = 0; j < wordList.length; j++){
+                    let alreadyFound = false
                     for (let n = 0; n < stringArray.length; n++){
                         if (stringArray[n].toLowerCase().includes(wordList[j].toLowerCase())){
+                                alreadyFound = true
                                 count += 1
                         }
                     }
@@ -147,7 +164,8 @@ export async function GET(request: Request){
                     && wordList[j].length > string.length){
                         count += 1
                     }
-                    else if (string.toLowerCase().includes(wordList[j].toLowerCase())){
+                    
+                    if (string.toLowerCase().includes(wordList[j].toLowerCase()) && !alreadyFound){
                         count += 1
                     }
 
