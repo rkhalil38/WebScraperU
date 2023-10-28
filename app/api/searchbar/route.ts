@@ -142,9 +142,12 @@ export async function GET(request: Request){
                                 count += 1
                         }
                     }
-                    console.log(string)
-                    console.log(wordList[j])
-                    if (wordList[j].toLowerCase().includes(string.toLowerCase())){
+                    
+                    if (wordList[j].toLowerCase().includes(string.toLowerCase())
+                    && wordList[j].length > string.length){
+                        count += 1
+                    }
+                    else if (string.toLowerCase().includes(wordList[j].toLowerCase())){
                         count += 1
                     }
 
