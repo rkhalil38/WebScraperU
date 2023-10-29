@@ -31,34 +31,9 @@ const DisplayBoxes = ({ formData, url, submitEvent }: {formData: FormData, url: 
             wordParam += activeWords[i]
         }
         else{
-            wordParam += '-' + activeWords[i]
+            wordParam += '--' + activeWords[i]
         }
     }
-
-    /*function countWordOccurrences(words: string[], arrayOfStrings: string[]) {
-        // Initialize a counter
-        let count = 0;
-
-        console.log(arrayOfStrings)
-    
-        // Iterate through each string in the array
-        arrayOfStrings.forEach((string) => {
-
-            const stringArray = string.split(' ')
-            
-            for (let j = 0; j < stringArray.length; j++){
-                for (let i = 0; i < words.length; i++){
-                    if (stringArray[j].toLowerCase().includes(words[i].toLowerCase())){
-                        count += 1
-                    }
-                }
-            }
-        }
-        );
-    
-        // Return the final count
-        return count;
-    }*/
 
     useEffect((() => {
 
@@ -70,13 +45,18 @@ const DisplayBoxes = ({ formData, url, submitEvent }: {formData: FormData, url: 
             const get_response = await fetch(fetching_url, {
                 method: 'GET'
             })
+            try{
+                const data = await get_response.json()
 
-            const data = await get_response.json()
+                const data_array = Object.values(data)
+                console.log(data_array)
+            
 
-            const data_array = Object.values(data)
-            console.log(data_array)
-
-            setScrapedData(data_array)            
+                setScrapedData(data_array) 
+            }
+            catch(error){
+                console.log(error)
+            }
 
         }
 
@@ -88,11 +68,13 @@ const DisplayBoxes = ({ formData, url, submitEvent }: {formData: FormData, url: 
 
     return (
         <div className='container flex flex-row text-black rounded-md w-full h-1/2'>
-            {(scrapedData as Array<object>).map((data: any, index: number) => (
-                <div key={index} className='container h-48 w-48 mx-2 flex justify-center items-center rounded-md bg-white duration-75 cursor-pointer hover:-translate-y-1 hover:translate-x-1'>
-                    <p className='text-8xl'>{data.rawMentions}</p>
+           {((scrapedData as Array<object>).length) > 0? ((scrapedData as Array<object>).map((data: any, index: number) => (
+                <div key={index} className='container h-48 w-48 mx-2 flex flex-col rounded-md bg-white duration-75 cursor-pointer hover:-translate-y-1 hover:translate-x-1'>
+                    <p className='text-1xl mx-auto pt-2 italic w-3/4 overflow-scroll'>{data.title}</p>
+                    <p className='text-9xl mx-auto pt-0 self-center'>{data.rawMentions}</p>
+                    <p className='text-2xl mx-auto'>mentions</p>
                 </div>
-            ))}
+            ))) : (<p>invalid component</p>)}
         </div>
     )
 }
