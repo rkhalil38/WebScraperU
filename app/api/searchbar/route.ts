@@ -30,18 +30,51 @@ function removeAds(dirtyData: string[]){
     const cleanArray: string[] = []
 
     dirtyData.forEach(element => {
-        if (!element.toLowerCase().includes(" ad ") && !element.toLowerCase().includes("ad ")
-        && !element.toLowerCase().includes(" ad") && !element.toLowerCase().includes(" ads ")){
+        if (!element.toLowerCase().includes(" ad ") && !element.toLowerCase().includes(" ads ")){
             cleanArray.push(element)
         }
+
     })
 
     return cleanArray
 }
 
+function findWordMentions(stringArray: string[], wordList: string[]){
+    let count = 0
+
+    stringArray.forEach((string) => {
+
+        const stringArray = string.split(' ')
+
+        for (let j = 0; j < wordList.length; j++){
+            let alreadyFound = false
+            for (let n = 0; n < stringArray.length; n++){
+                if (stringArray[n].toLowerCase().includes(wordList[j].toLowerCase())){
+                        alreadyFound = true
+                        count += 1
+                }
+            }
+            
+            if (wordList[j].toLowerCase().includes(string.toLowerCase())
+            && wordList[j].length > string.length){
+                count += 1
+            }
+            
+            if (string.toLowerCase().includes(wordList[j].toLowerCase()) && !alreadyFound){
+                count += 1
+            }
+
+        }
+        
+    }
+    );
+
+    return count
+}
+
 //write a function that compares string elements inside an array
 //if the string elements contain an identical substring, remove the longer string
-function removeSimilarElements(dirtyData: string[]){
+/*function removeSimilarElements(dirtyData: string[]){
     const cleanArray: string[] = []
 
     dirtyData.forEach(element => {
@@ -57,15 +90,15 @@ function removeSimilarElements(dirtyData: string[]){
     })
 
     return cleanArray
-}
+}*/
 
 function cleanData(dirtyData: string[]){
     
-    const cleanData = dirtyData? removeDuplicates(dirtyData) : []
+    let cleanData = dirtyData? removeDuplicates(dirtyData) : []
+    cleanData = removeAds(cleanData? cleanData : [])
+    cleanData = removeLongStrings(cleanData? cleanData : [])
 
-    const finalArray = removeLongStrings(cleanData? cleanData : [])
-
-    return finalArray
+    return cleanData
 
 }
 
@@ -118,16 +151,25 @@ export async function GET(request: Request){
 
             for (let j = 0; j < wordList.length; j++){
 
-                //need to make this mentionedElement line case insensitive
-                const mentionedElements = $('*').find(':contains("' + wordList[j] + '")')
+
+                //need to select all elements that contain the word only in p, span, and h1-h6 tags
+                const selector = ':contains(' + wordList[j] + ')'
+                const relevantElements = $('p' + selector + ',span' + selector + ',a' 
+                + selector + ',h1' + selector + ',h2' + selector + ',h3' + selector 
+                + ',h4' + selector + ',h5' + selector + ',h6' + selector)
 
                 const capitalized = wordList[j].charAt(0).toUpperCase() + wordList[j].slice(1)
-                const mentionedElements2 = $('*').find(':contains("' + capitalized + '")')
+                const capitalSelector = ':contains(' + capitalized + ')'
+                const relevantElementsCapital = $('p' + capitalSelector + ',span' + capitalSelector 
+                + ',a' + capitalSelector + ',h1' + capitalSelector 
+                + ',h2' + capitalSelector + ',h3' + capitalSelector + ',h4' 
+                + capitalSelector + ',h5' + capitalSelector + ',h6' + capitalSelector)
 
-                //want to combine mentionedElements1 with mentionedElements2
-                const combinedElements = mentionedElements.add(mentionedElements2)
-            
-                combinedElements.each((index, element: cheerio.Element) => {
+                
+                //want to combine all relevant elements into one list
+                const combinedElements = relevantElements.add(relevantElementsCapital)
+                
+                combinedElements.each((index, element) => {
                     const elementText = $(element).text();
 
                     //need to remove all new lines and replace with spaces
@@ -138,41 +180,12 @@ export async function GET(request: Request){
                     textArray.push(trimmedText)
                 });
 
+                console.log(textArray)
 
             }
 
-            const rawData = cleanData(textArray)
-            const adFreeData = removeAds(rawData)
-            const refinedData = removeSimilarElements(adFreeData)
-
-            let count = 0
-
-            refinedData.forEach((string) => {
-
-                const stringArray = string.split(' ')
-
-                for (let j = 0; j < wordList.length; j++){
-                    let alreadyFound = false
-                    for (let n = 0; n < stringArray.length; n++){
-                        if (stringArray[n].toLowerCase().includes(wordList[j].toLowerCase())){
-                                alreadyFound = true
-                                count += 1
-                        }
-                    }
-                    
-                    if (wordList[j].toLowerCase().includes(string.toLowerCase())
-                    && wordList[j].length > string.length){
-                        count += 1
-                    }
-                    
-                    if (string.toLowerCase().includes(wordList[j].toLowerCase()) && !alreadyFound){
-                        count += 1
-                    }
-
-                }
-                
-            }
-            );
+            const preparedData = cleanData(textArray)
+            const count = findWordMentions(preparedData, wordList)            
 
             interface URLMentionObject{
                 [key: string]: any
@@ -182,8 +195,9 @@ export async function GET(request: Request){
     
             mentions.push({
                 url: urlList[i],
-                mentions: refinedData,
-                rawMentions: count
+                mentions: preparedData,
+                rawMentions: count,
+                title: $('head').find('title').text(),
             })
 
             
