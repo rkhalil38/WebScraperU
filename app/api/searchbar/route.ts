@@ -39,7 +39,7 @@ function removeAds(dirtyData: string[]){
     return cleanArray
 }
 
-function findWordMentions(stringArray: string[], wordList: string[]){
+function findStringMentions(stringArray: string[], wordList: string[]){
     let count = 0
 
     stringArray.forEach((string) => {
@@ -71,26 +71,6 @@ function findWordMentions(stringArray: string[], wordList: string[]){
 
     return count
 }
-
-//write a function that compares string elements inside an array
-//if the string elements contain an identical substring, remove the longer string
-/*function removeSimilarElements(dirtyData: string[]){
-    const cleanArray: string[] = []
-
-    dirtyData.forEach(element => {
-        let isSimilar = false
-        for (let i = 0; i < cleanArray.length; i++){
-            if (cleanArray[i].includes(element)){
-                isSimilar = true
-            }
-        }
-        if (!isSimilar){
-            cleanArray.push(element)
-        }
-    })
-
-    return cleanArray
-}*/
 
 function cleanData(dirtyData: string[]){
     
@@ -130,8 +110,8 @@ export async function GET(request: Request){
     const words = searchParams.get('words')
     const urls = searchParams.get('urls')
 
-    const urlList = urls? urls.split('--') : []
-    const wordList = words? words.split('--') : []
+    const urlList = urls? urls.split('---') : []
+    const wordList = words? words.split('---') : []
 
     let allowParsing = true
     for (let i = 0; i < urlList.length; i++){
@@ -151,23 +131,34 @@ export async function GET(request: Request){
 
             for (let j = 0; j < wordList.length; j++){
 
+                let stringToLocate = ''
+
+                if (wordList[j].split('-').length > 1){
+                    stringToLocate = wordList[j].split('--').join(' ')
+                }
+                else{
+                    stringToLocate = wordList[j]
+                }
+
+                console.log(stringToLocate)
 
                 //need to select all elements that contain the word only in p, span, and h1-h6 tags
-                const selector = ':contains(' + wordList[j] + ')'
-                const relevantElements = $('p' + selector + ',span' + selector + ',a' 
-                + selector + ',h1' + selector + ',h2' + selector + ',h3' + selector 
+                const selector = ':contains(' + stringToLocate + ')'
+                const relevantElements = $('p' + selector + ',span' + selector + ',a'
+                + selector + ',div span' + selector + ',code' + selector + ',td' + selector + ',h1' + selector + ',h2' + selector + ',h3' + selector 
                 + ',h4' + selector + ',h5' + selector + ',h6' + selector)
 
-                const capitalized = wordList[j].charAt(0).toUpperCase() + wordList[j].slice(1)
+                const capitalized = stringToLocate.charAt(0).toUpperCase() + wordList[j].slice(1)
                 const capitalSelector = ':contains(' + capitalized + ')'
-                const relevantElementsCapital = $('p' + capitalSelector + ',span' + capitalSelector 
-                + ',a' + capitalSelector + ',h1' + capitalSelector 
+                const relevantElementsCapital = $('p' + capitalSelector + ',span' + capitalSelector +
+                + ',a' + capitalSelector + ',div span' + capitalSelector + ',code' + capitalSelector + ',td' + capitalSelector + ',h1' + capitalSelector 
                 + ',h2' + capitalSelector + ',h3' + capitalSelector + ',h4' 
                 + capitalSelector + ',h5' + capitalSelector + ',h6' + capitalSelector)
 
                 
                 //want to combine all relevant elements into one list
                 const combinedElements = relevantElements.add(relevantElementsCapital)
+
                 
                 combinedElements.each((index, element) => {
                     const elementText = $(element).text();
@@ -180,12 +171,12 @@ export async function GET(request: Request){
                     textArray.push(trimmedText)
                 });
 
-                console.log(textArray)
+                //console.log(textArray)
 
             }
 
             const preparedData = cleanData(textArray)
-            const count = findWordMentions(preparedData, wordList)            
+            const count = findStringMentions(preparedData, wordList)            
 
             interface URLMentionObject{
                 [key: string]: any

@@ -1,10 +1,10 @@
 "use client";
-import React, { useEffect, useState } from 'react'
+import React, { Suspense, useEffect, useState } from 'react'
 import { Interface } from 'readline';
 import { json } from 'stream/consumers';
 
 interface FormData {
-    words: string,
+    words: string[],
     urls: string,
     user_id: string
 }
@@ -12,8 +12,20 @@ interface FormData {
 const DisplayBoxes = ({ formData, url, submitEvent }: {formData: FormData, url: string, submitEvent: number}) => {
 
     const [scrapedData, setScrapedData] = useState<object>([])
-    const activeURLs = formData['urls'].split(', ')
-    const activeWords = formData['words'].split(', ')
+
+    let activeURLs: string[] = formData['urls'].split(',')
+
+    activeURLs.forEach((url, index) => {
+        let idealURL = url.trim()
+        activeURLs[index] = idealURL
+    })
+
+    let activeWords: string[] = formData['words']
+    
+    activeWords.forEach((word, index) => {
+        activeWords[index] = word.replace(' ', '--')
+    })
+
     
     let wordParam = ''
     let urlParam = ''
@@ -22,7 +34,7 @@ const DisplayBoxes = ({ formData, url, submitEvent }: {formData: FormData, url: 
             urlParam += activeURLs[i]
         }
         else{
-            urlParam += '--' + activeURLs[i]
+            urlParam += '---' + activeURLs[i]
         }
     }
 
@@ -31,13 +43,15 @@ const DisplayBoxes = ({ formData, url, submitEvent }: {formData: FormData, url: 
             wordParam += activeWords[i]
         }
         else{
-            wordParam += '--' + activeWords[i]
+            wordParam += '---' + activeWords[i]
         }
     }
 
     useEffect((() => {
 
         const fetching_url = url +  '?words=' + wordParam + '&urls=' + urlParam
+
+        setScrapedData([])
         
 
         const retrieveUserData = async () => {
@@ -64,18 +78,31 @@ const DisplayBoxes = ({ formData, url, submitEvent }: {formData: FormData, url: 
 
     }), [submitEvent])
 
-    //map scraped data to display boxes
 
+    //map scraped data to display boxes
     return (
-        <div className='container flex flex-row text-black rounded-md w-full h-1/2'>
-           {((scrapedData as Array<object>).length) > 0? ((scrapedData as Array<object>).map((data: any, index: number) => (
-                <div key={index} className='container h-48 w-48 mx-2 flex flex-col rounded-md bg-white duration-75 cursor-pointer hover:-translate-y-1 hover:translate-x-1'>
-                    <p className='text-1xl mx-auto pt-2 italic w-3/4 overflow-scroll'>{data.title}</p>
-                    <p className='text-9xl mx-auto pt-0 self-center'>{data.rawMentions}</p>
-                    <p className='text-2xl mx-auto'>mentions</p>
-                </div>
-            ))) : (<p>invalid component</p>)}
-        </div>
+    <div className='container'>
+            <div className='container flex flex-col px-2 text-black rounded-md w-full h-1/2'>
+            {((scrapedData as Array<object>).length) > 0? ((scrapedData as Array<object>).map((data: any, index: number) => (
+                    <div key= {index} className='container flex flex-row'>
+                        <div className='flex my-auto cursor-default items-center justify-center text-center mr-2 h-14 w-14 rounded-lg bg-white'>
+                            <p className='text-orange-400 text-2xl font-semibold'>{data.rawMentions}</p>
+                        </div>
+                        <div className='container h-14 w-full my-2 flex flex-row rounded-md bg-white duration-75 cursor-pointer hover:-translate-y-1 hover:translate-x-1'>
+                            <p className='text-1xl text-center my-4 pl-2 italic h-1/2 w-48 border-solid border-r-2 border-gray-300 overflow-auto'>{data.title}</p>
+                            <div className='container italic flex flex-row px-2'>
+                                {(data.mentions.length > 0)? (<p className='container text-gray-500 h-1/2 w-full overflow-hidden my-4'>{data.mentions[0]}...</p>)
+                                 : (<p className='container text-gray-500 h-1/2 w-full overflow-hidden my-4'>No mentions found. Try a different URL or String.</p>)}
+                            </div>
+                        </div>
+                    </div>
+                ))) : (<div className='container h-14 w-full my-2 flex flex-row rounded-md bg-white duration-75 cursor-default'>
+                        {((submitEvent) > 0? (<p className='my-auto px-2 text-xl text-orange-400 font-semibold'>Loading...</p>) :
+                        (<p className='my-auto px-2 text-xl text-orange-400 font-semibold'>Get scraping! Your results will display here!</p>)
+                        )}
+                      </div>)}
+            </div>
+    </div>
     )
 }
 

@@ -1,10 +1,10 @@
 "use client";
 import { randomInt } from "crypto";
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, Suspense, useEffect, useState } from "react";
 import DisplayBoxes from "./DisplayBoxes";
 
 interface FormData {
-    words: string,
+    words: string[],
     urls: string,
     user_id: string
 }
@@ -13,10 +13,12 @@ const Searchbar = ({ url }: {url: string}) => {
 
     
     const [formData, setFormData] = useState<FormData>({
-        words: "",
+        words: [],
         urls: "",
         user_id: "",
     })
+
+    const [queryError, setQueryError] = useState(false)
 
     const [submitEvent, setSubmitEvent] = useState(0)
 
@@ -46,11 +48,30 @@ const Searchbar = ({ url }: {url: string}) => {
     const handleWordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value
 
+        let queries = value.replace(/\],\s*/g, '],').trim();
+        const wordList = queries.split('],')
+        wordList.forEach((word, index) => {
+            
+            let wordToAdd = ''
+
+            if (word[0] == '['){
+                wordToAdd = word.slice(1)
+            }
+            else{
+                setQueryError(true)
+            }
+
+            if (word[word.length - 1] == ']'){
+                wordToAdd = wordToAdd.slice(0, word.length - 2)
+            }
+
+            wordList[index] = wordToAdd
+        })
+
         setFormData((prevFormData) => ({
             ...prevFormData,
-            words: value,
+            words: wordList,
         }))
-
 
     }
 
@@ -61,6 +82,8 @@ const Searchbar = ({ url }: {url: string}) => {
             ...prevFormData,
             urls: value,
         }))
+
+        console.log(formData)
     }
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -86,31 +109,29 @@ const Searchbar = ({ url }: {url: string}) => {
 
     }
 
+    return (
+        <div className="w-full">
+            <form onSubmit= {handleSubmit} className='flex flex-col items-center justify-center h-96 w-full bg-orange-400 rounded-md'>
+                <h1 className='mx-auto text-2xl font-semibold py-2'>Your own webscraper.</h1>
+                <input 
+                    name= "words"
+                    type="text" 
+                    className='container mx-auto bg-white text-black rounded-md mb-2 w-full h-12 px-2 focus:outline-none' 
+                    placeholder='Enter your string(s) here, wrapped in brackets. Separate multiple queries with commas.'
+                    onChange={handleWordChange}
 
-
-  return (
-    <div className="w-full">
-        <form onSubmit= {handleSubmit} className='flex flex-col items-center justify-center h-96 w-full bg-orange-400 rounded-md'>
-            <h1 className='mx-auto text-2xl font-semibold py-2'>Ctrl+F but better.</h1>
-            <input 
-                name= "words"
-                type="text" 
-                className='container mx-auto bg-white text-black rounded-md mb-2 w-full h-12 px-2 focus:outline-none' 
-                placeholder='Enter your word(s) here.'
-                onChange={handleWordChange}
-
-            />
-            <input 
-                name= "urls"
-                type="text" 
-                className='container mx-auto bg-white text-black rounded-md mb-2 w-full h-12 px-2 focus:outline-none' 
-                placeholder='Enter your url(s) here.'
-                onChange={handleURLChange}
-            />
-            <button type="submit" className='bg-green-400 rounded-md py-2 px-2 hover:bg-green-500'>Submit</button>
-        </form>
-        <DisplayBoxes formData= { formData } url= { url } submitEvent={ submitEvent }/>
-    </div>
+                />
+                <input 
+                    name= "urls"
+                    type="text" 
+                    className='container mx-auto bg-white text-black rounded-md mb-2 w-full h-12 px-2 focus:outline-none' 
+                    placeholder='Enter your url(s) here, separated by commas.'
+                    onChange={handleURLChange}
+                />
+                <button type="submit" className='bg-white rounded-md py-2 px-2 hover:bg-gray-100 text-orange-400'>Scrape!</button>
+            </form>
+            <DisplayBoxes formData= { formData } url= { url } submitEvent={ submitEvent }/>
+        </div>
   )
 }
 
