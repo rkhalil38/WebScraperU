@@ -127,6 +127,7 @@ export async function GET(request: Request){
             const html = await parsing_page.text()
             const $ = cheerio.load(html)
 
+            const cleanListForMentions: string[] = []
             const textArray: string[] = []
 
             for (let j = 0; j < wordList.length; j++){
@@ -140,26 +141,30 @@ export async function GET(request: Request){
                     stringToLocate = wordList[j]
                 }
 
-                console.log(stringToLocate)
+                cleanListForMentions.push(stringToLocate)
 
                 //need to select all elements that contain the word only in p, span, and h1-h6 tags
-                const selector = ':contains(' + stringToLocate + ')'
+                const selector = ':contains(' + stringToLocate.toLowerCase() + ')'
                 const relevantElements = $('p' + selector + ',span' + selector + ',a'
                 + selector + ',div span' + selector + ',code' + selector + ',td' + selector + ',h1' + selector + ',h2' + selector + ',h3' + selector 
                 + ',h4' + selector + ',h5' + selector + ',h6' + selector)
 
-                const capitalized = stringToLocate.charAt(0).toUpperCase() + wordList[j].slice(1)
-                const capitalSelector = ':contains(' + capitalized + ')'
+                const allCapsSelector = ':contains(' + stringToLocate.toUpperCase() + ')'
+                const relevantAllCaps = $('p' + allCapsSelector + ',span' + allCapsSelector +
+                + ',a' + allCapsSelector + ',div span' + allCapsSelector + ',code' + allCapsSelector + ',td' + allCapsSelector + ',h1' + allCapsSelector 
+                + ',h2' + allCapsSelector + ',h3' + allCapsSelector + ',h4' 
+                + allCapsSelector + ',h5' + allCapsSelector + ',h6' + allCapsSelector)
+
+                const first_capitalized = stringToLocate.charAt(0).toUpperCase() + wordList[j].slice(1)
+                const capitalSelector = ':contains(' + first_capitalized + ')'
                 const relevantElementsCapital = $('p' + capitalSelector + ',span' + capitalSelector +
                 + ',a' + capitalSelector + ',div span' + capitalSelector + ',code' + capitalSelector + ',td' + capitalSelector + ',h1' + capitalSelector 
                 + ',h2' + capitalSelector + ',h3' + capitalSelector + ',h4' 
                 + capitalSelector + ',h5' + capitalSelector + ',h6' + capitalSelector)
-
-                
+    
                 //want to combine all relevant elements into one list
-                const combinedElements = relevantElements.add(relevantElementsCapital)
-
-                
+                const combinedElements = relevantElements.add(relevantElementsCapital).add(relevantAllCaps)
+        
                 combinedElements.each((index, element) => {
                     const elementText = $(element).text();
 
@@ -176,7 +181,7 @@ export async function GET(request: Request){
             }
 
             const preparedData = cleanData(textArray)
-            const count = findStringMentions(preparedData, wordList)            
+            const count = findStringMentions(preparedData, cleanListForMentions)            
 
             interface URLMentionObject{
                 [key: string]: any

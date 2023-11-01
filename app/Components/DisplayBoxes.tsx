@@ -1,5 +1,7 @@
 "use client";
 import React, { Suspense, useEffect, useState } from 'react'
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css'
 import { Interface } from 'readline';
 import { json } from 'stream/consumers';
 
@@ -97,7 +99,8 @@ const DisplayBoxes = ({ formData, url, submitEvent }: {formData: FormData, url: 
                         </div>
                     </div>
                 ))) : (<div className='container h-14 w-full my-2 flex flex-row rounded-md bg-white duration-75 cursor-default'>
-                        {((submitEvent) > 0? (<p className='my-auto px-2 text-xl text-orange-400 font-semibold'>Loading...</p>) :
+                        {((submitEvent) > 0? 
+                        (<Skeleton className='h-full w-full'/>) :
                         (<p className='my-auto px-2 text-xl text-orange-400 font-semibold'>Get scraping! Your results will display here!</p>)
                         )}
                       </div>)}

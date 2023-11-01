@@ -11,16 +11,15 @@ interface FormData {
 
 const Searchbar = ({ url }: {url: string}) => {
 
-    
+    const [submitEvent, setSubmitEvent] = useState(0)
+
+
     const [formData, setFormData] = useState<FormData>({
         words: [],
         urls: "",
         user_id: "",
     })
 
-    const [queryError, setQueryError] = useState(false)
-
-    const [submitEvent, setSubmitEvent] = useState(0)
 
     useEffect( (() => {
 
@@ -57,10 +56,7 @@ const Searchbar = ({ url }: {url: string}) => {
             if (word[0] == '['){
                 wordToAdd = word.slice(1)
             }
-            else{
-                setQueryError(true)
-            }
-
+            
             if (word[word.length - 1] == ']'){
                 wordToAdd = wordToAdd.slice(0, word.length - 2)
             }
@@ -83,7 +79,6 @@ const Searchbar = ({ url }: {url: string}) => {
             urls: value,
         }))
 
-        console.log(formData)
     }
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -119,8 +114,7 @@ const Searchbar = ({ url }: {url: string}) => {
                     className='container mx-auto bg-white text-black rounded-md mb-2 w-full h-12 px-2 focus:outline-none' 
                     placeholder='Enter your string(s) here, wrapped in brackets. Separate multiple queries with commas.'
                     onChange={handleWordChange}
-
-                />
+                /> 
                 <input 
                     name= "urls"
                     type="text" 
