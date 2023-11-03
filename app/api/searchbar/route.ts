@@ -8,11 +8,6 @@ const supabase = createClient(
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJpZXZhYXNwcGZ4Z296dXVwZ2dvIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTc0NjkzNDQsImV4cCI6MjAxMzA0NTM0NH0.aydvwV4Sjar8JZan0_MPJlU1pVwfAq9sHqdBv-C1bps'
 )
 
-
-function removeLongStrings(inputArray: string[]) {
-    return inputArray.filter(string => string.length <= 700);
-}
-
 function removeDuplicates(dirtyData: string[]){
     const cleanArray: string[] = []
     dirtyData.forEach(element => { 
@@ -76,7 +71,7 @@ function cleanData(dirtyData: string[]){
     
     let cleanData = dirtyData? removeDuplicates(dirtyData) : []
     cleanData = removeAds(cleanData? cleanData : [])
-    cleanData = removeLongStrings(cleanData? cleanData : [])
+    //cleanData = removeLongStrings(cleanData? cleanData : [])
 
     return cleanData
 

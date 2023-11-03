@@ -1,11 +1,14 @@
 import React from 'react'
+import { AiFillGithub } from 'react-icons/ai'
+import Link from 'next/link'
 
 const Navbar = () => {
 
     return (
-        <div className='container z-10 group flex flex-row items-center justify-center absolute w-12 h-12 duration-75 hover:w-2/12 bg-white rounded-full mx-3 my-4'>
-            <p className='text-orange-400 left-4 top-3 absolute mx-0 cursor-default'>W</p>
-            <p className='text-orange-400 hidden group-hover:translate-x-14 group-hover:inline '>D</p>
+        <div className='container flex bg-white flex-row items-center justify-center absolute w-40 h-12 rounded-lg mx-3 my-4'>
+            <p className='text-orange-400 px-2 py-1 rounded-lg hover:bg-gray-200 text-lg cursor-default'>W</p>
+            <Link href='https://github.com/rkhalil38' className='text-orange-400 px-2 py-1 rounded-lg hover:bg-gray-200 text-3xl cursor-pointer'><AiFillGithub/></Link>
+            <p className='text-orange-400 px-2 py-1 rounded-lg hover:bg-gray-200 text-lg cursor-pointer'>API</p>
         </div>
     )
 }
