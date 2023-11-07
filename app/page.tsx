@@ -12,7 +12,7 @@ export default async function Home() {
       <div className='flex container h-full w-1/6 bg-orange-400'>
         <Navbar/>
       </div>
-      <div className='flex flex-col container h-full w-4/6 bg-orange-400 items-center'>
+      <div className='flex flex-col container h-full w-4/6 bg-orange-400 items-center overflow-scroll'>
         <Searchbar url= { api_endpoint }/>
       </div>
       <div className='flex container h-full w-1/6 bg-orange-400 items center'></div>
