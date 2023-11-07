@@ -17,6 +17,7 @@
     "jquery": "^3.7.1",
     "next": "13.5.5",
     "react": "^18",
+    "react-copy-to-clipboard": "^5.1.0",
     "react-dom": "^18",
     "react-icons": "^4.11.0",
     "react-loading-skeleton": "^3.3.1",
@@ -26,6 +27,7 @@
   "devDependencies": {
     "@types/node": "^20",
     "@types/react": "^18",
+    "@types/react-copy-to-clipboard": "^5.0.6",
     "@types/react-dom": "^18",
     "autoprefixer": "^10",
     "eslint": "^8",

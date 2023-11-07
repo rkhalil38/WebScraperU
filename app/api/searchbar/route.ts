@@ -114,87 +114,106 @@ export async function GET(request: Request){
     }
     
     if (allowParsing){
+
+
+        try {
+            const mentions = []
+
+            for (let i = 0; i < urlList.length; i++){
+                const parsing_page = await fetch(urlList? urlList[i] : '')
+                const html = await parsing_page.text()
+                const $ = cheerio.load(html)
+
+                const cleanListForMentions: string[] = []
+                const textArray: string[] = []
+
+                for (let j = 0; j < wordList.length; j++){
+
+                    let stringToLocate = ''
+
+                    if (wordList[j].split('-').length > 1){
+                        stringToLocate = wordList[j].split('--').join(' ')
+                    }
+                    else{
+                        stringToLocate = wordList[j]
+                    }
+
+                    cleanListForMentions.push(stringToLocate)
+
+                    //need to select all elements that contain the word only in p, span, and h1-h6 tags
+                    const normalSelector = ":contains('" + stringToLocate + "')"
+                    const relevantNormalElements = $('p' + normalSelector + ',span' + normalSelector + ',a' 
+                    + normalSelector + ',div span' + normalSelector
+                    + ',code' + normalSelector + ',td' + normalSelector + ',h1' + normalSelector 
+                    + ',h2' + normalSelector + ',h3' + normalSelector + ',h4' + normalSelector 
+                    + ',h5' + normalSelector + ',h6' + normalSelector)
+
+                    const selector = ":contains('" + stringToLocate.toLowerCase() + "')"
+                    const relevantElements = $('p' + selector + ',span' + selector + ',a'
+                    + selector + ',div span' + selector + ',code' + selector + ',td' + selector + ',h1' + selector + ',h2' + selector + ',h3' + selector 
+                    + ',h4' + selector + ',h5' + selector + ',h6' + selector)
+
+                    const allCapsSelector = ":contains('" + stringToLocate.toUpperCase() + "')"
+                    const relevantAllCaps = $('p' + allCapsSelector + ',span' + allCapsSelector +
+                    + ',a' + allCapsSelector + ',div span' + allCapsSelector + ',code' + allCapsSelector + ',td' + allCapsSelector + ',h1' + allCapsSelector 
+                    + ',h2' + allCapsSelector + ',h3' + allCapsSelector + ',h4' 
+                    + allCapsSelector + ',h5' + allCapsSelector + ',h6' + allCapsSelector)
+
+                    const allFirstletterCaps = stringToLocate.split(' ').map((word) => {
+                        return word.charAt(0).toUpperCase() + word.slice(1)
+                    })
+                    const first_capitalized = allFirstletterCaps.join(' ')
+                    const capitalSelector = ":contains('" + first_capitalized + "')"
+                    const relevantElementsCapital = $('p' + capitalSelector + ',span' + capitalSelector +
+                    + ',a' + capitalSelector + ',div span' + capitalSelector + ',code' + capitalSelector + ',td' + capitalSelector + ',h1' + capitalSelector 
+                    + ',h2' + capitalSelector + ',h3' + capitalSelector + ',h4' 
+                    + capitalSelector + ',h5' + capitalSelector + ',h6' + capitalSelector)
+
+                    
         
-        const mentions = []
-
-        for (let i = 0; i < urlList.length; i++){
-            const parsing_page = await fetch(urlList? urlList[i] : '')
-            const html = await parsing_page.text()
-            const $ = cheerio.load(html)
-
-            const cleanListForMentions: string[] = []
-            const textArray: string[] = []
-
-            for (let j = 0; j < wordList.length; j++){
-
-                let stringToLocate = ''
-
-                if (wordList[j].split('-').length > 1){
-                    stringToLocate = wordList[j].split('--').join(' ')
-                }
-                else{
-                    stringToLocate = wordList[j]
-                }
-
-                cleanListForMentions.push(stringToLocate)
-
-                //need to select all elements that contain the word only in p, span, and h1-h6 tags
-                const selector = ':contains(' + stringToLocate.toLowerCase() + ')'
-                const relevantElements = $('p' + selector + ',span' + selector + ',a'
-                + selector + ',div span' + selector + ',code' + selector + ',td' + selector + ',h1' + selector + ',h2' + selector + ',h3' + selector 
-                + ',h4' + selector + ',h5' + selector + ',h6' + selector)
-
-                const allCapsSelector = ':contains(' + stringToLocate.toUpperCase() + ')'
-                const relevantAllCaps = $('p' + allCapsSelector + ',span' + allCapsSelector +
-                + ',a' + allCapsSelector + ',div span' + allCapsSelector + ',code' + allCapsSelector + ',td' + allCapsSelector + ',h1' + allCapsSelector 
-                + ',h2' + allCapsSelector + ',h3' + allCapsSelector + ',h4' 
-                + allCapsSelector + ',h5' + allCapsSelector + ',h6' + allCapsSelector)
-
-                const first_capitalized = stringToLocate.charAt(0).toUpperCase() + wordList[j].slice(1)
-                const capitalSelector = ':contains(' + first_capitalized + ')'
-                const relevantElementsCapital = $('p' + capitalSelector + ',span' + capitalSelector +
-                + ',a' + capitalSelector + ',div span' + capitalSelector + ',code' + capitalSelector + ',td' + capitalSelector + ',h1' + capitalSelector 
-                + ',h2' + capitalSelector + ',h3' + capitalSelector + ',h4' 
-                + capitalSelector + ',h5' + capitalSelector + ',h6' + capitalSelector)
-    
-                //want to combine all relevant elements into one list
-                const combinedElements = relevantElements.add(relevantElementsCapital).add(relevantAllCaps)
-        
-                combinedElements.each((index, element) => {
-                    const elementText = $(element).text();
-
-                    //need to remove all new lines and replace with spaces
-                    const cleanedText = elementText.replace(/\n/g, '')
-                    const trimmedText = cleanedText.replace(/\s{2,}/g, ' ').trim()
-
-
-                    textArray.push(trimmedText)
-                });
-
-                //console.log(textArray)
-
-            }
-
-            const preparedData = cleanData(textArray)
-            const count = findStringMentions(preparedData, cleanListForMentions)            
-
-            interface URLMentionObject{
-                [key: string]: any
-            }
-
-            let obj: URLMentionObject = {}
-    
-            mentions.push({
-                url: urlList[i],
-                mentions: preparedData,
-                rawMentions: count,
-                title: $('head').find('title').text(),
-            })
-
+                    //want to combine all relevant elements into one list
+                    const combinedElements = relevantElements.add(relevantElementsCapital).add(relevantAllCaps)//.add(relevantNormalElements)
             
-        }
+                    combinedElements.each((index, element) => {
+                        const elementText = $(element).text();
+
+                        //need to remove all new lines and replace with spaces
+                        const cleanedText = elementText.replace(/\n/g, '')
+                        const trimmedText = cleanedText.replace(/\s{2,}/g, ' ').trim()
+
+
+                        textArray.push(trimmedText)
+                    });
+
+                    //console.log(textArray)
+
+                }
+
+                const preparedData = cleanData(textArray)
+                const count = findStringMentions(preparedData, cleanListForMentions)            
+
+                interface URLMentionObject{
+                    [key: string]: any
+                }
+
+                let obj: URLMentionObject = {}
         
-        return new Response(JSON.stringify(mentions))
+                mentions.push({
+                    url: urlList[i],
+                    mentions: preparedData,
+                    rawMentions: count,
+                    title: $('head').find('title').text(),
+                })
+
+                
+            }
+            
+            return new Response(JSON.stringify(mentions))
+        }
+        catch(error){
+            console.log(error)
+            return new Response(JSON.stringify("Invalid string. Please try a different string."), {status: 500})
+        }
     }
 
     return new Response(JSON.stringify("One or more invalid URLs."))
