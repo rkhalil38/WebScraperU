@@ -1,32 +1,26 @@
 "use client";
-import { useSearchParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react'
 import {CopyToClipboard} from 'react-copy-to-clipboard';
 import { GoCopy } from 'react-icons/go';
-
-function generateMetaData(title: string, description: string){
-    //need to dynamically generate metadata for page title and description
-    
-}
-
+import Head from 'next/head';
 
 const Page = () => {
 
     const [relevantData, setRelevantData] = useState([])
     const [title, setTitle] = useState('')
-    const searchParams = useSearchParams()
-    const stringIndex: string | null = searchParams.get('index')
-    const index: number = parseInt(stringIndex? stringIndex : '0')
 
     useEffect(() => {
         const data = localStorage.getItem('data')
-        setRelevantData(JSON.parse(data? data : '')[index]['mentions'])
-        setTitle(JSON.parse(data? data : '')[index]['title'])
+        setRelevantData(JSON.parse(data? data : '')['mentions'])
+        setTitle(JSON.parse(data? data : '')['title'])
     }, [])
 
     
     return (
         <div className='flex justify-center h-screen w-screen overflow-scroll bg-orange-400'>
+            <Head>
+                <title>Mentions</title>
+            </Head>
             <div className='container flex flex-col my-4 items-center text-black rounded-lg'>
                 <div className='container justify-center items-center flex flex-row'>
                     <h1 className='py-4 text-white font-semibold text-2xl mx-4'>Mentions from {title}</h1>

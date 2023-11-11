@@ -5,7 +5,6 @@ import { MouseEvent } from 'react';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css'
 import { BiErrorCircle } from 'react-icons/bi';
-import Popup from 'reactjs-popup';
 
 interface FormData {
     words: string[],
@@ -111,9 +110,9 @@ const DisplayBoxes = ({ formData, url, submitEvent }: {formData: FormData, url: 
     }), [submitEvent])
 
 
-    function storeToLocalStorage(event: MouseEvent<HTMLAnchorElement>){
+    function storeToLocalStorage(index: number){
         localStorage.clear()
-        localStorage.setItem('data', JSON.stringify(scrapedData))
+        localStorage.setItem('data', JSON.stringify(scrapedData[index]))
     }
 
     //map scraped data to display boxes
@@ -121,7 +120,7 @@ const DisplayBoxes = ({ formData, url, submitEvent }: {formData: FormData, url: 
     <div className='container'>
         <div className='container flex flex-col px-2 text-black rounded-md w-full h-1/2'>
             {error.length > 0?
-                <div className='container flex flex-row items-center px-4 py-4 text-white rounded-lg bg-red-500'>
+                <div className='container cursor-default flex flex-row items-center px-4 py-4 text-white rounded-lg bg-red-500'>
                     <BiErrorCircle className='mx-2 text-xl'/> {error}
                 </div>
              :
@@ -131,10 +130,7 @@ const DisplayBoxes = ({ formData, url, submitEvent }: {formData: FormData, url: 
                                 <div className='flex my-auto cursor-default items-center justify-center text-center mr-2 h-14 w-14 rounded-lg bg-white'>
                                     <p className='flex text-orange-400 text-2xl font-semibold'>{data.rawMentions}</p>
                                 </div>
-                                <Link href={{
-                                    pathname: '/mentions',
-                                    query: { index: index}
-                                }} onClick={storeToLocalStorage} rel="noopener noreferrer" target="_blank" className='container h-14 w-full my-2 flex flex-row rounded-md bg-white duration-75 cursor-pointer hover:-translate-y-1 hover:translate-x-1'>
+                                <Link href= '\mentions' onClick={ () => storeToLocalStorage(index) } rel="noopener noreferrer" target="_blank" className='container h-14 w-full my-2 flex flex-row rounded-md bg-white duration-75 cursor-pointer hover:-translate-y-1 hover:translate-x-1'>
                                     <p className='flex text-1xl text-center my-4 pl-2 italic h-1/2 w-48 border-solid border-r-2 border-gray-300 overflow-auto'>{data.title}</p>
                                     <div className='container italic flex flex-row px-2'>
                                         {(data.mentions.length > 0)? (<p className='flex text-gray-500 h-1/2 w-full overflow-hidden my-4'>{data.mentions[0]}...</p>)
