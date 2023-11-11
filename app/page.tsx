@@ -6,6 +6,7 @@ import Navbar from './Components/Navbar'
 export default async function Home() {
 
   const api_endpoint = "http://localhost:3000/api/searchbar"
+  console.log(api_endpoint)
 
   return (
     <main className='flex w-screen h-screen'>
