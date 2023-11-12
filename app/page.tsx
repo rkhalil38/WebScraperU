@@ -5,7 +5,7 @@ import Navbar from './Components/Navbar'
 
 export default async function Home() {
 
-  const api_endpoint = "http://localhost:3000/api/searchbar"
+  const api_endpoint = "https://web-scraper-u.vercel.app/api/searchbar"
   console.log("romulsu")
 
   return (
