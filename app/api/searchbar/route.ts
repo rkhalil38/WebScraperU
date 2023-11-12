@@ -2,10 +2,13 @@ import { createClient } from "@supabase/supabase-js";
 import { Console } from "console";
 import * as cheerio from 'cheerio';
 import validator from "validator";
+require('dotenv').config()
+
+const supabase_key: string = process.env.DATABASE_ENDPOINT? process.env.DATABASE_ENDPOINT : ''
 
 const supabase = createClient(
     'https://rievaasppfxgozuupggo.supabase.co',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJpZXZhYXNwcGZ4Z296dXVwZ2dvIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTc0NjkzNDQsImV4cCI6MjAxMzA0NTM0NH0.aydvwV4Sjar8JZan0_MPJlU1pVwfAq9sHqdBv-C1bps'
+    supabase_key
 )
 
 function removeDuplicates(dirtyData: string[]){

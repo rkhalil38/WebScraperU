@@ -13,7 +13,6 @@ const Searchbar = ({ url }: {url: string}) => {
 
     const [submitEvent, setSubmitEvent] = useState(0)
 
-
     const [formData, setFormData] = useState<FormData>({
         words: [],
         urls: "",

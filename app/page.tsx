@@ -2,11 +2,11 @@ import Searchbar from './Components/Searchbar'
 import DisplayBoxes from './Components/DisplayBoxes'
 import Head from 'next/head'
 import Navbar from './Components/Navbar'
+require('dotenv').config()
 
 export default async function Home() {
 
-  const api_endpoint = "https://web-scraper-u.vercel.app/api/searchbar"
-  console.log("romulsu")
+  const api_endpoint = process.env.API_ENDPOINT? process.env.API_ENDPOINT : 'null'
 
   return (
     <main className='flex w-screen h-screen'>

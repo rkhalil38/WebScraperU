@@ -73,6 +73,7 @@ const DisplayBoxes = ({ formData, url, submitEvent }: {formData: FormData, url: 
     useEffect((() => {
 
         const fetching_url = url +  '?words=' + wordParam + '&urls=' + urlParam
+        console.log(fetching_url)
         
         setScrapedData([])
         setError('')
@@ -100,7 +101,7 @@ const DisplayBoxes = ({ formData, url, submitEvent }: {formData: FormData, url: 
                 }
             }
             catch(fetch_error: any){
-                setError(JSON.parse(fetch_error))
+                setError(fetch_error)
             }
 
         }
