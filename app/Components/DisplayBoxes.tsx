@@ -78,14 +78,16 @@ const DisplayBoxes = ({ formData, url, submitEvent }: {formData: FormData, url: 
         setScrapedData([])
         setError('')
         
+        
 
         const retrieveUserData = async () => {
 
-            try{
-                const get_response = await fetch(fetching_url, {
-                    method: 'GET'
-                })
+            const get_response = await fetch(fetching_url, {
+                method: 'GET'
+            })
 
+            try{
+                
                 const data = await get_response.json()
 
                 //const data_array: ScrapedData[] = Object.values(data)
