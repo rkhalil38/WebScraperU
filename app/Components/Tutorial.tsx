@@ -1,7 +1,8 @@
 "use client";
 import { useEffect, useState } from "react";
 import { BsXLg } from 'react-icons/bs'
-import image from '../tutorial.png'
+import Image from 'next/image'
+import tutorialPic from '../tutorial.png'
 
 
 //added tutorial because original context was not clear enough
@@ -23,7 +24,12 @@ const Tutorial = () => {
                     <div className="w-10/12 h-full">
                         <h1 className="text-white text-2xl font-semibold text-center mt-2 mb-1">Welcome to WebScraperU!</h1>
                         <p className="text-white font-semibold text-center mb-2">Here's a quick example on how to use your own webscraper.</p>
-                        <img src={ image.src } className="rounded-lg"></img>
+                        <Image className="rounded-lg"
+                            src={tutorialPic}
+                            alt="tutorial"
+                            height={500}
+                            width={900}
+                        />
                     </div>
                     <div className="w-1/12 text-right rounded-r-lg">
                         <button onClick={ handleToggle } className="text-white hover:text-red-600 px-3 py-3 text-3xl"><BsXLg/></button>

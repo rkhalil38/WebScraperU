@@ -81,7 +81,6 @@ const DisplayBoxes = ({ formData, url, submitEvent }: {formData: FormData, url: 
 
         const retrieveUserData = async () => {
 
-            
             try{
                 const get_response = await fetch(fetching_url, {
                     method: 'GET'
