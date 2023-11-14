@@ -1,7 +1,7 @@
 import Searchbar from './Components/Searchbar'
-import DisplayBoxes from './Components/DisplayBoxes'
-import Head from 'next/head'
 import Navbar from './Components/Navbar'
+import Tutorial from './Components/Tutorial'
+
 require('dotenv').config()
 
 export default async function Home() {
@@ -15,6 +15,7 @@ export default async function Home() {
       </div>
       <div className='flex flex-col container h-full w-4/6 bg-orange-400 items-center overflow-scroll'>
         <Searchbar url= { api_endpoint }/>
+        <Tutorial/>
       </div>
       <div className='flex container h-full w-1/6 bg-orange-400 items center'></div>
     </main>

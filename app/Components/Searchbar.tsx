@@ -1,6 +1,5 @@
 "use client";
-import { randomInt } from "crypto";
-import { FormEvent, Suspense, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import DisplayBoxes from "./DisplayBoxes";
 
 interface FormData {
