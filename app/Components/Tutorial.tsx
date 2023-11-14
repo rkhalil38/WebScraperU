@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { BsXLg } from 'react-icons/bs'
 import image from '../tutorial.png'
 
+
+//added tutorial because original context was not clear enough
 const Tutorial = () => {
 
     const [isActive, setIsActive] = useState(true)
