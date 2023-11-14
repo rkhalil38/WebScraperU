@@ -26,6 +26,7 @@ const Tutorial = () => {
                         <p className="text-white font-semibold text-center mb-2">Here's a quick example on how to use your own webscraper.</p>
                         <Image className="rounded-lg"
                             src={tutorialPic}
+                            priority={true}
                             alt="tutorial"
                             height={500}
                             width={900}
