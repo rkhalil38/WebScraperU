@@ -6,11 +6,13 @@ require('dotenv').config()
 
 const supabase_key: string = process.env.DATABASE_ENDPOINT? process.env.DATABASE_ENDPOINT : ''
 
+//create supabase client to store to database
 const supabase = createClient(
     'https://rievaasppfxgozuupggo.supabase.co',
     supabase_key
 )
 
+//removes duplicate strings from a list of strings
 function removeDuplicates(dirtyData: string[]){
     const cleanArray: string[] = []
     dirtyData.forEach(element => { 
@@ -23,7 +25,7 @@ function removeDuplicates(dirtyData: string[]){
     
 }
 
-//write a function that removes any string from a list of strings that contains the word "ad"
+//function that removes any string from a list of strings that contains the word "ad"
 function removeAds(dirtyData: string[]){
     const cleanArray: string[] = []
 
@@ -37,6 +39,8 @@ function removeAds(dirtyData: string[]){
     return cleanArray
 }
 
+//finds that amount of raw mentions in a list of strings
+//think command + f on the list
 function findStringMentions(stringArray: string[], wordList: string[]){
     let count = 0
 
@@ -70,6 +74,7 @@ function findStringMentions(stringArray: string[], wordList: string[]){
     return count
 }
 
+//function that leverages all the functions created above to clean the data
 function cleanData(dirtyData: string[]){
     
     let cleanData = dirtyData? removeDuplicates(dirtyData) : []
@@ -80,6 +85,7 @@ function cleanData(dirtyData: string[]){
 
 }
 
+//post the data to the database
 export async function POST(request: Request){
 
     try {
@@ -102,6 +108,7 @@ export async function POST(request: Request){
 
 }
 
+//uses urls and words passed as params to find mentions of the words in the urls
 export async function GET(request: Request){
 
     const { searchParams } = new URL(request.url)
@@ -111,6 +118,7 @@ export async function GET(request: Request){
     const urlList = urls? urls.split('---') : []
     const wordList = words? words.split('---') : []
 
+    //checks if the urls are valid
     let allowParsing = true
     for (let i = 0; i < urlList.length; i++){
         allowParsing = validator.isURL(urlList[i])
@@ -144,6 +152,8 @@ export async function GET(request: Request){
                     cleanListForMentions.push(stringToLocate)
 
                     //need to select all elements that contain the word only in p, span, and h1-h6 tags
+
+                    //finds all elements that contain the unaltered string
                     const normalSelector = ":contains('" + stringToLocate + "')"
                     const relevantNormalElements = $('p' + normalSelector + ',span' + normalSelector + ',a' 
                     + normalSelector + ',div span' + normalSelector
@@ -151,17 +161,20 @@ export async function GET(request: Request){
                     + ',h2' + normalSelector + ',h3' + normalSelector + ',h4' + normalSelector 
                     + ',h5' + normalSelector + ',h6' + normalSelector)
 
+                    //finds all elements that contain the string in lowercase
                     const selector = ":contains('" + stringToLocate.toLowerCase() + "')"
                     const relevantElements = $('p' + selector + ',span' + selector + ',a'
                     + selector + ',div span' + selector + ',code' + selector + ',td' + selector + ',h1' + selector + ',h2' + selector + ',h3' + selector 
                     + ',h4' + selector + ',h5' + selector + ',h6' + selector)
 
+                    //finds all elements that contain the string in all caps
                     const allCapsSelector = ":contains('" + stringToLocate.toUpperCase() + "')"
                     const relevantAllCaps = $('p' + allCapsSelector + ',span' + allCapsSelector +
                     + ',a' + allCapsSelector + ',div span' + allCapsSelector + ',code' + allCapsSelector + ',td' + allCapsSelector + ',h1' + allCapsSelector 
                     + ',h2' + allCapsSelector + ',h3' + allCapsSelector + ',h4' 
                     + allCapsSelector + ',h5' + allCapsSelector + ',h6' + allCapsSelector)
 
+                    //finds all elements that contain the string with the first letter capitalized
                     const allFirstletterCaps = stringToLocate.split(' ').map((word) => {
                         return word.charAt(0).toUpperCase() + word.slice(1)
                     })
@@ -187,8 +200,6 @@ export async function GET(request: Request){
 
                         textArray.push(trimmedText)
                     });
-
-                    //console.log(textArray)
 
                 }
 
@@ -222,6 +233,7 @@ export async function GET(request: Request){
     return new Response(JSON.stringify("One or more invalid URLs."))
 }
 
+//unused patch function, could be leveraged in future updates
 export async function PATCH(request: Request){
     try {
         

@@ -49,7 +49,7 @@ const DisplayBoxes = ({ formData, url, submitEvent }: {formData: FormData, url: 
         activeWords[index] = word.replace(' ', '--')
     })
 
-    
+    //separate each word with three dashes as to avoid confusion with spaces
     let wordParam = ''
     let urlParam = ''
     for (let i = 0; i < activeURLs.length; i++){
@@ -72,6 +72,7 @@ const DisplayBoxes = ({ formData, url, submitEvent }: {formData: FormData, url: 
 
     useEffect((() => {
 
+        //on submit events, the url and words are sent to the backend
         const fetching_url = url +  '?words=' + wordParam + '&urls=' + urlParam
         console.log(fetching_url)
         
@@ -89,8 +90,6 @@ const DisplayBoxes = ({ formData, url, submitEvent }: {formData: FormData, url: 
             try{
                 
                 const data = await get_response.json()
-
-                //const data_array: ScrapedData[] = Object.values(data)
 
                 if (typeof Object.values(data)[0] == 'string'){
                     const data_array: string[] = Object.values(data)
@@ -113,13 +112,15 @@ const DisplayBoxes = ({ formData, url, submitEvent }: {formData: FormData, url: 
 
     }), [submitEvent])
 
-
+    //store data to local storage
     function storeToLocalStorage(index: number){
         localStorage.clear()
         localStorage.setItem('data', JSON.stringify(scrapedData[index]))
     }
 
     //map scraped data to display boxes
+    //reroute user to mentions page on click
+    //store the clicked mentions to local storage and access them on the mentions page
     return (
     <div className='container'>
         <div className='container flex flex-col px-2 text-black rounded-md w-full h-1/2'>
