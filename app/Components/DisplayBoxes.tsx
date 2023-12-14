@@ -158,7 +158,7 @@ const DisplayBoxes = ({ formData, url, submitEvent }: {formData: FormData, url: 
                                             </div>
                                         </div>
                                     </div>)
-                                    :(<p className='my-auto px-2 text-xl text-orange-400 font-semibold'>Get scraping! Your results will display here!</p>))}
+                                    :(<p className='my-auto px-2 text-xl text-white font-semibold'>Get scraping! Your results will display here!</p>))}
                                 </div>)}
                 </div>
             }   

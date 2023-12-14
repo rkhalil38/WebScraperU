@@ -104,7 +104,7 @@ const Searchbar = ({ url }: {url: string}) => {
 
     return (
         <div className="w-full">
-            <form onSubmit= {handleSubmit} className='flex flex-col items-center justify-center h-96 w-full bg-orange-400 rounded-md'>
+            <form onSubmit= {handleSubmit} className='flex flex-col items-center justify-center h-96 w-full rounded-md'>
                 <h1 className='mx-auto select-none text-2xl font-semibold py-2'>Your own webscraper.</h1>
                 <input 
                     name= "words"

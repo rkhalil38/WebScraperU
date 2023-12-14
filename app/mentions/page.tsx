@@ -17,7 +17,7 @@ const Page = () => {
 
     
     return (
-        <div className='flex justify-center h-screen w-screen overflow-scroll bg-orange-400'>
+        <div className='flex justify-center h-screen w-screen overflow-scroll bg-gradient-to-b from-orange-400 to-orange-300'>
             <Head>
                 <title>Mentions</title>
             </Head>
