@@ -9,17 +9,22 @@ import tutorialPic from '../tutorial.png'
 const Tutorial = () => {
 
     const [isActive, setIsActive] = useState(true)
+    const [position, setPosition] = useState('translate-y-[120%]')
 
     const handleToggle = () => {
         setIsActive(!isActive)
     }
 
+    useEffect(() => {
 
+        setPosition('translate-y-0')
+
+    }, [])
     return (
         <div className="container flex w-full">
             
             { isActive? 
-                <div className="flex flex-row my-2 bg-orange-400 w-full rounded-lg">
+                <div className={`flex duration-200 ${position} flex-row my-2 bg-orange-400 w-full rounded-lg`}>
                     <div className="w-1/12 h-full rounded-l-lg"></div>
                     <div className="w-10/12 h-full">
                         <h1 className="text-white text-2xl font-semibold text-center mt-2 mb-1">Welcome to WebScraperU!</h1>
