@@ -24,7 +24,7 @@ const Tutorial = () => {
         <div className="container flex w-full">
             
             { isActive? 
-                <div className={`flex duration-200 ${position} flex-row my-2 bg-orange-400 w-full rounded-lg`}>
+                <div className={`flex duration-300 ${position} flex-row my-2 bg-orange-400 w-full rounded-lg`}>
                     <div className="w-1/12 h-full rounded-l-lg"></div>
                     <div className="w-10/12 h-full">
                         <h1 className="text-white text-2xl font-semibold text-center mt-2 mb-1">Welcome to WebScraperU!</h1>
@@ -37,7 +37,7 @@ const Tutorial = () => {
                         />
                     </div>
                     <div className="w-1/12 text-right rounded-r-lg">
-                        <button onClick={ handleToggle } className="text-white hover:text-red-600 px-3 py-3 text-3xl"><BsXLg/></button>
+                        <button onClick={ handleToggle } className="text-white duration-200 rounded-lg hover:text-red-400 px-3 py-3 text-3xl"><BsXLg/></button>
                     </div> 
                 </div>       
             : 
