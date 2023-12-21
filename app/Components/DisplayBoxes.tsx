@@ -79,8 +79,6 @@ const DisplayBoxes = ({ formData, url, submitEvent }: {formData: FormData, url: 
         setScrapedData([])
         setError('')
         
-        
-
         const retrieveUserData = async () => {
 
             const get_response = await fetch(fetching_url, {
@@ -124,7 +122,7 @@ const DisplayBoxes = ({ formData, url, submitEvent }: {formData: FormData, url: 
     return (
     <div className='container'>
         <div className='container flex flex-col px-2 text-black rounded-md w-full h-1/2'>
-            {error.length > 0?
+            {error.length > 0 && submitEvent > 0?
                 <div className='container cursor-default flex flex-row items-center px-4 py-4 text-white rounded-lg bg-red-500'>
                     <BiErrorCircle className='mx-2 text-xl'/> {error}
                 </div>

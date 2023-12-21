@@ -119,13 +119,12 @@ export async function GET(request: Request){
     const wordList = words? words.split('---') : []
 
     //checks if the urls are valid
-    let allowParsing = true
+    let allowParsing = false
     for (let i = 0; i < urlList.length; i++){
         allowParsing = validator.isURL(urlList[i])
     }
     
     if (allowParsing){
-
 
         try {
             const mentions = []
@@ -133,6 +132,7 @@ export async function GET(request: Request){
             for (let i = 0; i < urlList.length; i++){
                 const parsing_page = await fetch(urlList? urlList[i] : '')
                 const html = await parsing_page.text()
+                
                 const $ = cheerio.load(html)
 
                 const cleanListForMentions: string[] = []
