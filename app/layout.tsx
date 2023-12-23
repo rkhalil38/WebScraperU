@@ -6,6 +6,7 @@ import { Analytics } from '@vercel/analytics/react'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://www.webscraperu.com'),
   title: 'WebScraperU | Web Scrape for Free',
   description: 'A personalized WebScraper that allows anyone to look for specific words or phrases on any website.',
   keywords: ['Web Scraper', 'Word Finder', 'Sentence Finder', 'Web Scraper U', 'WebScraperU', 'scrape web', 'WebScraperU.com', 'web scrape'],
