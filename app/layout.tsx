@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     url: 'https://www.webscraperu.com',
     type: 'website',
     siteName: 'WebScraperU',
-    images: '/og-image.png',
+    images: '/opengraph-image.png',
   }
 }
 
