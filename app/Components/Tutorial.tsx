@@ -26,10 +26,10 @@ const Tutorial = () => {
             { isActive? 
                 <div className={`flex duration-300 ${position} flex-row my-2 bg-orange-400 w-full rounded-lg`}>
                     <div className="w-1/12 h-full rounded-l-lg"></div>
-                    <div className="w-10/12 h-full">
+                    <div className="flex flex-col w-10/12 h-full">
                         <h1 className="text-white text-2xl font-semibold text-center mt-2 mb-1">Welcome to WebScraperU!</h1>
                         <p className="text-white font-semibold text-center mb-2">Here is a quick example on how to use your own webscraper.</p>
-                        <Image className="rounded-lg pb-4"
+                        <Image className="rounded-lg pb-4 self-center"
                             src={tutorialPic} 
                             alt="tutorial" 
                             width={900} 
