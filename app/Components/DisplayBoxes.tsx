@@ -130,10 +130,10 @@ const DisplayBoxes = ({ formData, url, submitEvent }: {formData: FormData, url: 
                 <div>
                     {((scrapedData as Array<object>).length) > 0? ((scrapedData as Array<object>).map((data: any, index: number) => (
                             <div key= {index} className='container flex flex-row'>
-                                <div className='flex my-auto cursor-default items-center justify-center text-center mr-2 h-14 w-14 rounded-lg bg-white'>
-                                    <p className='flex text-orange-400 text-2xl font-semibold'>{data.rawMentions}</p>
+                                <div className='my-auto cursor-default items-center justify-center text-center mr-2 rounded-lg bg-white'>
+                                    <p className='flex justify-center items-center text-orange-400 w-14 h-14 text-2xl font-semibold'>{data.rawMentions}</p>
                                 </div>
-                                <Link href= '\mentions' onClick={ () => storeToLocalStorage(index) } rel="noopener noreferrer" target="_blank" className='container h-14 w-full my-2 flex flex-row rounded-md bg-white duration-75 cursor-pointer hover:-translate-y-1 hover:translate-x-1'>
+                                <Link href= '\mentions' onClick={ () => storeToLocalStorage(index) } rel="noopener noreferrer" target="_blank" className='container h-14 md:w-full my-2 flex flex-row rounded-md bg-white duration-75 cursor-pointer hover:-translate-y-1 hover:translate-x-1'>
                                     <p className='flex text-1xl text-center my-4 pl-2 italic h-1/2 w-48 border-solid border-r-2 border-gray-300 overflow-auto'>{data.title}</p>
                                     <div className='container italic flex flex-row px-2'>
                                         {(data.mentions.length > 0)? (<p className='flex text-gray-500 h-1/2 w-full overflow-hidden my-4'>{data.mentions[0]}...</p>)
