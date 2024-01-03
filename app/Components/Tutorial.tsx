@@ -34,6 +34,7 @@ const Tutorial = () => {
                             alt="tutorial" 
                             width={900} 
                             height={500}
+                            priority
                         />
                     </div>
                     <div className="w-1/12 text-right rounded-r-lg">
